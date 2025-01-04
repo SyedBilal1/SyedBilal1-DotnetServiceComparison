@@ -1,25 +1,32 @@
 # Use the official .NET SDK image to build the app
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
+EXPOSE 443
 
-# Copy the solution and project files
-COPY API.sln ./
-COPY API.csproj ./
+# Use the official .NET SDK image to build the app
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
 
-# Restore dependencies
-RUN dotnet restore API.sln
+# Copy the API.csproj file (since both Dockerfile and API.csproj are in the API folder)
+COPY ./API.csproj ./ 
+
+# Restore the dependencies
+RUN dotnet restore "./API.csproj"
 
 # Copy the rest of the application files
-COPY . ./ 
-# This will copy all contents from the current directory into the container
+COPY . .
 
 # Set the working directory and build the app
-WORKDIR /app
-RUN dotnet publish -c Release -o /app/out
+WORKDIR "/src"
+RUN dotnet build "API.csproj" -c Release -o /app/build
 
-# Use the official .NET runtime image to run the app
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+# Publish the app
+FROM build AS publish
+RUN dotnet publish "API.csproj" -c Release -o /app/publish
+
+# Copy the build output from the 'publish' stage to the 'base' image and set the entry point
+FROM base AS final
 WORKDIR /app
-COPY --from=build /app/out .
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "API.dll"]

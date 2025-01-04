@@ -41,4 +41,4 @@ jobs:
         context: .
         file: Dockerfile
         push: true
-        tags: sbili/di-service:latest
+        tags: sbili/di-api:latest
