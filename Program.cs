@@ -7,6 +7,12 @@ builder.Services.AddSingleton<ISingleton, Services>();
 builder.Services.AddScoped<IScoped, Services>();
 builder.Services.AddTransient<ITransient, Services>();
 
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(80); // Ensure it's listening on port 80
+});
+
+
 var app = builder.Build();
 
 app.UseHttpsRedirection();
@@ -24,5 +30,6 @@ app.MapGet("/doit", (ISingleton singletonService, IScoped scopedServices1, IScop
     };
 });
 
+app.MapGet("/test", () => "API is working!");
 
 app.Run();
