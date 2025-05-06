@@ -14,7 +14,7 @@
 ---
 
 ## Introduction
-The **SyedBilal1-DotnetServiceComparison** project serves as a comparative analysis of .NET-based services. This repository demonstrates the implementation, performance, and scalability of different service architectures in .NET.
+The **DotnetServiceComparison** project serves as a comparative analysis of .NET-based services. This repository demonstrates the implementation, performance, and scalability of different service architectures in .NET.
 
 Whether you are comparing microservices, monolithic applications, or serverless setups, this repository provides a structured and practical approach to evaluate and learn from various .NET service models.
 
